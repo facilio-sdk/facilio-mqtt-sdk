@@ -58,8 +58,14 @@ public class FacilioMQTTClient extends AWSIotMqttClient {
     public static FacilioMQTTClient getMQTTClient() {
         return getMQTTClient(FacilioProperties.getProperty(PropertyKeys.END_POINT), FacilioProperties.getProperty(PropertyKeys.CLIENT_ID));
     }
+    /**
+     * 
+     * @param clientEndpoint  clientEndpoint provided by facilio
+     * @param clientId      clientId associated with Facilio Account
+     * @return returns FacilioMQTTClient client or NULL
+     */
 
-    private static FacilioMQTTClient getMQTTClient(String clientEndpoint, String clientId) {
+    public static FacilioMQTTClient getMQTTClient(String clientEndpoint, String clientId) {
         if(pair == null ) {
             if(FacilioProperties.getProperty(PropertyKeys.KEY_FILE) != null && FacilioProperties.getProperty(PropertyKeys.CERT_FILE) != null) {
                 pair = KeyStorePasswordPair.getKeyStorePasswordPair(FacilioProperties.getFacilioHome() + FacilioProperties.getProperty(PropertyKeys.CERT_FILE),
@@ -73,6 +79,30 @@ public class FacilioMQTTClient extends AWSIotMqttClient {
         }
         return client;
     }
+    
+    /**
+     * 
+     * @param clientEndpoint  clientEndpoint provided by facilio
+     * @param clientId      clientId associated with Facilio Account
+     * @param certificatePath  File path of certificate provided by Facilio
+     * @param privatekeyPath   File Path of private key provided by facilio
+     * @return returns FacilioMQTTClient client or NULL
+     */
+
+    public static FacilioMQTTClient getMQTTClient(String clientEndpoint, String clientId, String certificatePath, String privatekeyPath) {
+        if(pair == null ) {
+          
+                pair = KeyStorePasswordPair.getKeyStorePasswordPair(certificatePath,privatekeyPath);
+            
+        }
+        if(pair != null) {
+            if(client == null) {
+                client = new FacilioMQTTClient(clientEndpoint, clientId, pair.getKeyStore(), pair.getKeyPassword());
+            }
+        }
+        return client;
+    }
+
     /**
      * @param topic unique string associated with facilio account
      */
