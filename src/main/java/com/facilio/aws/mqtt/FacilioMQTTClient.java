@@ -7,6 +7,36 @@ import com.facilio.util.KeyStorePasswordPair;
 import com.facilio.util.PropertyKeys;
 
 import java.security.KeyStore;
+/**
+<br>This class is the main interface of the Facilio MQTT library. It provides both blocking and non-blocking methods for interacting with Facilio services over the MQTT protocol. With this client, one can directly publish messages to the Facilio service and subscribe or unsubscribe to any pub/sub topics.<br> 
+<br>There are two types of connections this SDK supports to connect to the AWS IoT service:<br><br>
+
+<b>MQTT</b> (over TLS 1.2) with X.509 certificate based mutual authentication<br>
+<b>MQTT</b>  over Secure WebSocket with AWS SigV4 authentication<br>
+For <b>MQTT</b>  over TLS, a KeyStore containing a valid device certificate and private key is required for instantiating the client. Password for decrypting the private key in the KeyStore must also be provided.<br>
+
+
+<br>For more information about Facilio IoT service, please refer to the Facilio developer guide.<br><br>
+
+To use the client directly, a typical flow would be like the below, and since methods in this class are thread-safe, publish and subscribe can be called from different threads.<br><br>
+
+
+   FacilioMQTTClient client = new FacilioMQTTClient(...);<br><br>
+   
+   client.connect();<br><br><br>
+   
+   ...<br>
+   client.subscribe(topic, ...)<br><br>
+   ...<br>
+   client.publish(message, ...)<br><br>
+
+
+  
+* 
+* 
+* @author Yoge
+*
+*/
 
 public class FacilioMQTTClient extends AWSIotMqttClient {
 
@@ -43,7 +73,9 @@ public class FacilioMQTTClient extends AWSIotMqttClient {
         }
         return client;
     }
-
+    /**
+     * @param topic unique string associated with facilio account
+     */
     public void publish(String topic, String payload) {
         publish(new Message(topic, AWSIotQos.QOS0, payload));
     }
