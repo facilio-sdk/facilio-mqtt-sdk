@@ -20,17 +20,16 @@ For <b>MQTT</b>  over TLS, a KeyStore containing a valid device certificate and 
 
 To use the client directly, a typical flow would be like the below, and since methods in this class are thread-safe, publish and subscribe can be called from different threads.<br><br>
 
-
+<pre>
    FacilioMQTTClient client = new FacilioMQTTClient(...);<br><br>
    
-   client.connect();<br><br><br>
-   
+   client.connect();<br>
    ...<br>
-   client.subscribe(topic, ...)<br><br>
+   client.subscribe(topic, ...)<br>
    ...<br>
    client.publish(message, ...)<br><br>
 
-
+</pre>
   
 * 
 * 
@@ -105,6 +104,28 @@ public class FacilioMQTTClient extends AWSIotMqttClient {
 
     /**
      * @param topic unique string associated with facilio account
+     * @param payload JSON playload
+     * 
+     * <br><br>Example to send time series data
+     * <pre>
+     *  FacilioMQTTClient client = FacilioMQTTClient.getMQTTClient(......);
+     *    String payload = {
+     *                     "PUBLISH_TYPE": "timeseries",
+     *                     	"DEVICE_Chiller 1": {
+    *                      		"Power": "155.03",
+    *                      		"Energy": "1794620.5",
+    *                      		"Power Factor": "0.89"
+    *                      },
+    *                      	"DEVICE_Chiller 2": {
+    *                      		"Power": "155.03",
+    *                      		"Energy": "1794620.5",
+    *                      		"Power Factor": "0.89"
+    *                      }
+     *                  }
+     *     
+     *     client.publish("abc_towers", payload) ;
+     *  </pre>
+     * 
      */
     public void publish(String topic, String payload) {
         publish(new Message(topic, AWSIotQos.QOS0, payload));
